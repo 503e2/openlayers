@@ -8,6 +8,7 @@ goog.provide('ol.uri');
  * @param {!Object} params An object where keys are URI-encoded parameter keys,
  *     and the values are arbitrary types or arrays.
  * @return {string} The new URI.
+ * @api
  */
 ol.uri.appendParams = function(uri, params) {
   var keyParams = [];
