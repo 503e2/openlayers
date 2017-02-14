@@ -1,6 +1,6 @@
 {
   "name": "openlayers",
-  "version": "3.20.1",
+  "version": "4.0.1",
   "description": "Build tools and sources for developing OpenLayers based mapping applications",
   "keywords": [
     "map",
@@ -40,7 +40,7 @@
     "jsdoc": "3.4.3",
     "marked": "0.3.6",
     "metalsmith": "2.3.0",
-    "metalsmith-layouts": "1.7.0",
+    "metalsmith-layouts": "1.8.0",
     "nomnom": "1.8.1",
     "pbf": "3.0.5",
     "pixelworks": "1.1.0",
@@ -50,16 +50,18 @@
     "walk": "2.3.9"
   },
   "devDependencies": {
-    "clean-css-cli": "4.0.0",
-    "coveralls": "2.11.15",
+    "clean-css-cli": "4.0.6",
+    "coveralls": "2.11.16",
     "debounce": "^1.0.0",
-    "eslint": "3.14.1",
+    "eslint": "3.15.0",
     "eslint-config-openlayers": "7.0.0",
     "eslint-plugin-openlayers-internal": "^3.1.0",
+    "esprima": "2.x",
     "expect.js": "0.3.1",
     "gaze": "^1.0.0",
     "istanbul": "0.4.5",
     "jquery": "3.1.1",
+    "jscodeshift": "^0.3.30",
     "mocha": "3.2.0",
     "mocha-phantomjs-core": "^2.1.0",
     "mustache": "2.3.0",
@@ -87,15 +89,6 @@
       "openlayers-internal"
     ],
     "rules": {
-      "no-console": [
-        2,
-        {
-          "allow": [
-            "assert",
-            "warn"
-          ]
-        }
-      ],
       "no-constant-condition": 0,
       "openlayers-internal/enum": 2,
       "openlayers-internal/no-duplicate-requires": 2,

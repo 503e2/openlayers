@@ -2,11 +2,31 @@
 
 ### Next release
 
-#### Removed build flags (`@define`)
+### v4.0.0
 
-The `ol.DEBUG`, `ol.ENABLE_TILE`, `ol.ENABLE_IMAGE`, `ol.ENABLE_VECTOR`, and `ol.ENABLE_VECTOR_TILE` build flags are no longer necessary and have been removed.  If you were using these in a `define` array for a custom build, you can remove them.
+#### Simpler `ol.source.Zoomify` `url` configuration
 
-If you leave `ol.ENABLE_WEBGL` set to `true` in your build, you should set `ol.DEBUG_WEBGL` to `false` to avoid including debuggable shader sources.
+Instead specifying a base url, the `url` for the `ol.source.Zoomify` source can now be a template.  The `{TileGroup}`, `{x}`, `{y}`, `{z}` and placeholders must be included in the `url` in this case. the `url` can now also include subdomain placeholders:
+```js
+new ol.source.Zoomify({
+  url: 'https://{a-f}.example.com/cgi-bin/iipsrv.fcgi?zoomify=/a/b/{TileGroup}/{z}-{x}-{y}.jpg'
+});
+```
+
+#### Removal of deprecated methods
+
+The deprecated `ol.animation` functions and `map.beforeRender()` method have been removed.  Use `view.animate()` instead.
+
+The `unByKey()` method has been removed from `ol.Observable` instances.  Use the `ol.Observable.unByKey()` static function instead.
+```js
+var key = map.on('moveend', function() { ...});
+map.unByKey(key);
+```
+New code:
+```js
+var key = map.on('moveend', function() { ...});
+ol.Observable.unByKey(key);
+```
 
 #### Simplified `ol.View#fit()` API
 
@@ -28,6 +48,13 @@ Advanced use - new API:
 ```js
 map.getView().fit(extent, {size: [200, 100], padding 10});
 ```
+
+#### Removed build flags (`@define`)
+
+The `ol.DEBUG`, `ol.ENABLE_TILE`, `ol.ENABLE_IMAGE`, `ol.ENABLE_VECTOR`, and `ol.ENABLE_VECTOR_TILE` build flags are no longer necessary and have been removed.  If you were using these in a `define` array for a custom build, you can remove them.
+
+If you leave `ol.ENABLE_WEBGL` set to `true` in your build, you should set `ol.DEBUG_WEBGL` to `false` to avoid including debuggable shader sources.
+
 
 ### v3.20.0
 

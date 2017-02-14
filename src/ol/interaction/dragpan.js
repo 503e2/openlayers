@@ -16,7 +16,7 @@ goog.require('ol.interaction.Pointer');
  * @constructor
  * @extends {ol.interaction.Pointer}
  * @param {olx.interaction.DragPanOptions=} opt_options Options.
- * @api stable
+ * @api
  */
 ol.interaction.DragPan = function(opt_options) {
 
@@ -38,6 +38,11 @@ ol.interaction.DragPan = function(opt_options) {
    * @type {ol.Pixel}
    */
   this.lastCentroid = null;
+
+  /**
+   * @type {number}
+   */
+  this.lastPointersCount_;
 
   /**
    * @private
@@ -62,25 +67,33 @@ ol.inherits(ol.interaction.DragPan, ol.interaction.Pointer);
  * @private
  */
 ol.interaction.DragPan.handleDragEvent_ = function(mapBrowserEvent) {
+  var targetPointers = this.targetPointers;
   var centroid =
-      ol.interaction.Pointer.centroid(this.targetPointers);
-  if (this.kinetic_) {
-    this.kinetic_.update(centroid[0], centroid[1]);
-  }
-  if (this.lastCentroid) {
-    var deltaX = this.lastCentroid[0] - centroid[0];
-    var deltaY = centroid[1] - this.lastCentroid[1];
-    var map = mapBrowserEvent.map;
-    var view = map.getView();
-    var viewState = view.getState();
-    var center = [deltaX, deltaY];
-    ol.coordinate.scale(center, viewState.resolution);
-    ol.coordinate.rotate(center, viewState.rotation);
-    ol.coordinate.add(center, viewState.center);
-    center = view.constrainCenter(center);
-    view.setCenter(center);
+      ol.interaction.Pointer.centroid(targetPointers);
+  if (targetPointers.length == this.lastPointersCount_) {
+    if (this.kinetic_) {
+      this.kinetic_.update(centroid[0], centroid[1]);
+    }
+    if (this.lastCentroid) {
+      var deltaX = this.lastCentroid[0] - centroid[0];
+      var deltaY = centroid[1] - this.lastCentroid[1];
+      var map = mapBrowserEvent.map;
+      var view = map.getView();
+      var viewState = view.getState();
+      var center = [deltaX, deltaY];
+      ol.coordinate.scale(center, viewState.resolution);
+      ol.coordinate.rotate(center, viewState.rotation);
+      ol.coordinate.add(center, viewState.center);
+      center = view.constrainCenter(center);
+      view.setCenter(center);
+    }
+  } else if (this.kinetic_) {
+    // reset so we don't overestimate the kinetic energy after
+    // after one finger down, tiny drag, second finger down
+    this.kinetic_.begin();
   }
   this.lastCentroid = centroid;
+  this.lastPointersCount_ = targetPointers.length;
 };
 
 
@@ -112,6 +125,11 @@ ol.interaction.DragPan.handleUpEvent_ = function(mapBrowserEvent) {
     view.setHint(ol.ViewHint.INTERACTING, -1);
     return false;
   } else {
+    if (this.kinetic_) {
+      // reset so we don't overestimate the kinetic energy after
+      // after one finger up, tiny drag, second finger up
+      this.kinetic_.begin();
+    }
     this.lastCentroid = null;
     return true;
   }

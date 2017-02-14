@@ -41,6 +41,7 @@ ol.renderer.canvas.Map = function(container, map) {
 
   this.canvas_.style.width = '100%';
   this.canvas_.style.height = '100%';
+  this.canvas_.style.display = 'block';
   this.canvas_.className = ol.css.CLASS_UNSELECTABLE;
   container.insertBefore(this.canvas_, container.childNodes[0] || null);
 
@@ -144,7 +145,10 @@ ol.renderer.canvas.Map.prototype.renderFrame = function(frameState) {
   var layerStatesArray = frameState.layerStatesArray;
   ol.array.stableSort(layerStatesArray, ol.renderer.Map.sortByZIndex);
 
-  ol.render.canvas.rotateAtOffset(context, rotation, width / 2, height / 2);
+  if (rotation) {
+    context.save();
+    ol.render.canvas.rotateAtOffset(context, rotation, width / 2, height / 2);
+  }
 
   var viewResolution = frameState.viewState.resolution;
   var i, ii, layer, layerRenderer, layerState;
@@ -161,7 +165,9 @@ ol.renderer.canvas.Map.prototype.renderFrame = function(frameState) {
     }
   }
 
-  ol.render.canvas.rotateAtOffset(context, -rotation, width / 2, height / 2);
+  if (rotation) {
+    context.restore();
+  }
 
   this.dispatchComposeEvent_(
       ol.render.EventType.POSTCOMPOSE, frameState);
