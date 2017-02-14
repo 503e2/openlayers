@@ -465,7 +465,8 @@ ol.format.GeoJSON.prototype.readProjectionFromObject = function(object) {
     } else {
       ol.asserts.assert(false, 36); // Unknown SRS type
     }
-  } else {
+  } 
+  if (!projection) {
     projection = this.defaultDataProjection;
   }
   return /** @type {ol.proj.Projection} */ (projection);
